@@ -5,8 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { navLinks } from "@/lib/constants";
-import { ReactElement, JSXElementConstructor, ReactNode, AwaitedReactNode, Key, ReactPortal } from "react";
-import { UrlObject } from "url";
 
 const LeftSideBar = () => {
   const pathname = usePathname();
@@ -16,7 +14,7 @@ const LeftSideBar = () => {
       <Image src="/logo.png" alt="logo" width={150} height={70} />
 
       <div className="flex flex-col gap-8">
-        {navLinks.map((link: { url: string | UrlObject; label: boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<AwaitedReactNode> | Key | null | undefined; icon: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }) => (
+        {navLinks.map((link) => (
           <Link
           key={link.label}
             href={link.url}
