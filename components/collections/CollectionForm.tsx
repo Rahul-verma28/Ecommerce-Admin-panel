@@ -23,9 +23,16 @@ import toast from "react-hot-toast";
 import Delete from "../custom ui/Delete";
 
 const formSchema = z.object({
-  title: z.string().min(2).max(20),
-  description: z.string().min(2).max(500).trim(),
-  image: z.string(),
+  title: z
+    .string()
+    .min(2, { message: "Title must be at least 2 characters." })
+    .max(50, { message: "Title must be at most 50 characters." }),
+  description: z
+    .string()
+    .min(10, { message: "Description must be at least 10 characters." })
+    .max(500, { message: "Description must be at most 500 characters." })
+    .trim(),
+  image: z.string().min(1, { message: "Please upload an image." }),
 });
 
 interface CollectionFormProps {
@@ -36,19 +43,15 @@ const CollectionForm: React.FC<CollectionFormProps> = ({ initialData }) => {
   const router = useRouter();
   const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
+  
   const handleImageChange = (newImages: string[]) => {
-    if (newImages.length > 0) {
-      setImage(newImages[0]); // Store only the first image URL
-      form.setValue("image", newImages[0]); // Update the form's image value
-    }
+    form.setValue("image", newImages[0] || "");
+    form.clearErrors("image"); // Clear error when image is added
   };
 
   const handleImageRemove = () => {
-    setImage(null);
-    form.setValue("image", ""); // Clear the image value in the form
+    form.setValue("image", "");
   };
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData

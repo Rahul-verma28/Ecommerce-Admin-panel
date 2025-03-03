@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -8,6 +8,7 @@ import { navLinks } from "@/lib/constants";
 
 const LeftSideBar = () => {
   const pathname = usePathname();
+  const { isSignedIn } = useUser();
 
   return (
     <div className="h-screen left-0 top-0 sticky p-10 flex flex-col gap-16 shadow-xl bg-blue-2 max-lg:hidden">
@@ -16,7 +17,7 @@ const LeftSideBar = () => {
       <div className="flex flex-col gap-8">
         {navLinks.map((link) => (
           <Link
-          key={link.label}
+            key={link.label}
             href={link.url}
             className={`flex gap-4 text-body-medium ${
               pathname === link.url ? "text-blue-1" : "text-grey-1"
@@ -28,8 +29,15 @@ const LeftSideBar = () => {
       </div>
 
       <div className="flex gap-2 text-body-medium items-center absolute bottom-10">
-        <UserButton />
-        <p>Edit Profile</p>
+        {isSignedIn ? (
+          <div className="flex gap-2 items-center">
+            <UserButton /> <span>Profile</span>
+          </div>
+        ) : (
+          <Link href="/sign-in" className="text-blue-1">
+            Sign-in
+          </Link>
+        )}
       </div>
     </div>
   );

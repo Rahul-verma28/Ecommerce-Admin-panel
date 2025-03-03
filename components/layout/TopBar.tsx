@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -12,6 +12,7 @@ import { navLinks } from "@/lib/constants";
 const TopBar = () => {
   const [dropdownMenu, setDropdownMenu] = useState(false);
   const pathname = usePathname();
+  const { isSignedIn } = useUser();
 
   return (
     <div className="sticky top-0 z-20 w-full flex justify-between items-center px-8 py-4 bg-blue-2 shadow-xl lg:hidden">
@@ -47,7 +48,13 @@ const TopBar = () => {
             ))}
           </div>
         )}
-        <UserButton />
+        {isSignedIn ? (
+          <UserButton />
+        ) : (
+          <Link href="/sign-in" className="text-blue-1">
+            Sign-in
+          </Link>
+        )}
       </div>
     </div>
   );

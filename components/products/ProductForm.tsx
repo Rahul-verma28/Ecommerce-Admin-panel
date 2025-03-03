@@ -26,16 +26,27 @@ import MultiSelect from "../custom ui/MultiSelect";
 import Loader from "../custom ui/Loader";
 
 const formSchema = z.object({
-  title: z.string().min(2).max(20),
-  description: z.string().min(2).max(500).trim(),
-  media: z.array(z.string()),
-  category: z.string(),
+  title: z
+    .string()
+    .min(2, { message: "Title must be at least 2 characters." })
+    .max(50, { message: "Title must be at most 50 characters." }),
+  description: z
+    .string()
+    .min(10, { message: "Description must be at least 10 characters." })
+    .max(500, { message: "Description must be at most 500 characters." })
+    .trim(),
+  media: z
+    .array(z.string())
+    .min(1, { message: "Please upload at least one image." }),
+  category: z.string().min(1, { message: "Category is required." }),
   collections: z.array(z.string()),
   tags: z.array(z.string()),
   sizes: z.array(z.string()),
   colors: z.array(z.string()),
-  price: z.coerce.number().min(0.1),
-  expense: z.coerce.number().min(0.1),
+  price: z.coerce.number().min(0.1, { message: "Price must be at least 0.1." }),
+  expense: z.coerce
+    .number()
+    .min(0.1, { message: "Expense must be at least 0.1." }),
 });
 
 interface ProductFormProps {
@@ -181,11 +192,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 <FormControl>
                   <ImageUpload
                     value={field.value}
-                    onChange={(url) => field.onChange([...field.value, url])}
+                    onChange={(urls) => field.onChange(urls)}
                     onRemove={(url) =>
-                      field.onChange([
-                        ...field.value.filter((image) => image !== url),
-                      ])
+                      field.onChange(field.value.filter((item) => item !== url))
                     }
                   />
                 </FormControl>
